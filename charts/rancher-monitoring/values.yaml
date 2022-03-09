@@ -51,7 +51,7 @@ exporter-kube-controller-manager:
       port: 10252
       protocol: TCP
   serviceSelectorLabels:
-  - "k8s-app=kube-controller-manager"
+    - "k8s-app=kube-controller-manager"
   insecureSkipVerify: true
 
 exporter-kube-dns:
@@ -71,7 +71,7 @@ exporter-kube-dns:
         port: 10055
         protocol: TCP
   serviceSelectorLabels:
-  - "k8s-app=kube-dns"
+    - "k8s-app=kube-dns"
   insecureSkipVerify: true
 
 exporter-kube-etcd:
@@ -85,7 +85,7 @@ exporter-kube-etcd:
       port: 4001
       protocol: TCP
   serviceSelectorLabels:
-  - "k8s-app=etcd-server"
+    - "k8s-app=etcd-server"
   insecureSkipVerify: true
   caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
   certFile: ""
@@ -102,14 +102,14 @@ exporter-kube-scheduler:
       port: 10251
       protocol: TCP
   serviceSelectorLabels:
-  - "component=kube-scheduler"
+    - "component=kube-scheduler"
   insecureSkipVerify: true
 
 exporter-kubelets:
   enabled: false
   apiGroup: "monitoring.coreos.com"
   serviceSelectorLabels:
-  - "k8s-app=kubelet"
+    - "k8s-app=kubelet"
   insecureSkipVerify: true
   ## Set false when using GKE
   ##
@@ -123,8 +123,8 @@ exporter-kubernetes:
       scheme: https
       name: https
   serviceSelectorLabels:
-  - "component=apiserver"
-  - "provider=kubernetes"
+    - "component=apiserver"
+    - "provider=kubernetes"
   insecureSkipVerify: true
 
 exporter-fluentd:
@@ -135,7 +135,7 @@ exporter-fluentd:
       scheme: http
       name: metric
   serviceSelectorLabels:
-  - "app=fluentd"
+    - "app=fluentd"
   insecureSkipVerify: true
 
 exporter-node:
@@ -222,26 +222,19 @@ alertmanager:
     global:
       resolve_timeout: 5m
     route:
-      group_by: ['job']
+      group_by: ["job"]
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 12h
-      receiver: 'null'
+      receiver: "null"
       routes:
-      - match:
-          alertname: DeadMansSwitch
-        receiver: 'null'
+        - match:
+            alertname: DeadMansSwitch
+          receiver: "null"
     receivers:
-    - name: 'null'
+      - name: "null"
   persistence:
     enabled: false
-  storageSpec:
-    volumeName: "prometheus-prometheus-operator-prometheus-db-prometheus-prometheus-operator-prometheus-0"
-    accessModes: ["ReadWriteOnce"]
-    storageClassName: "local-storage"
-    resources:
-      requests:
-        storage: 10Gi
   ## Already exist ServiceAccount
   ##
   serviceAccountName: ""
@@ -304,15 +297,15 @@ prometheus:
   level: cluster
   auth:
     args:
-    - --proxy-url=http://127.0.0.1:9090
-    - --listen-address=$(POD_IP):9090
-    - --filter-reader-labels=prometheus
-    - --filter-reader-labels=prometheus_replica
+      - --proxy-url=http://127.0.0.1:9090
+      - --listen-address=$(POD_IP):9090
+      - --filter-reader-labels=prometheus
+      - --filter-reader-labels=prometheus_replica
     env:
-    - name: POD_IP
-      valueFrom:
-        fieldRef:
-          fieldPath: status.podIP
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
   apiGroup: "monitoring.coreos.com"
   image:
     repository: rancher/mirrored-prometheus-prometheus
@@ -350,11 +343,14 @@ prometheus:
         memory: 100Mi
         cpu: 100m
   persistence:
-    name: ""
     enabled: false
-    storageClass: ""
-    accessMode: "ReadWriteOnce"
-    size: 50Gi
+  storageSpec:
+    volumeName: "prometheus-prometheus-operator-prometheus-db-prometheus-prometheus-operator-prometheus-0"
+    accessModes: ["ReadWriteOnce"]
+    storageClassName: "local-storage"
+    resources:
+      requests:
+        storage: 10Gi
   alertingEndpoints: []
   secrets: []
   ## Override the default generated ServiceAccount name
