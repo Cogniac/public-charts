@@ -11,7 +11,7 @@ spec:
   persistentVolumeReclaimPolicy: Delete
   storageClassName: local-path
   hostPath:
-    path: /cogdata/prometheus
+    path: {{ .Values.persistence_location }}
     type: DirectoryOrCreate
   nodeAffinity:
     required:

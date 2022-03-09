@@ -344,7 +344,8 @@ prometheus:
         cpu: 100m
   persistence:
     enabled: false
-  edgeflow: true
+  edgeflow: false
+  persistence_location: "/tmp/prometheus"
   storageSpec:
     volumeName: "prometheus-cluster-monitoring-db-prometheus-cluster-monitoring-0"
     accessModes: ["ReadWriteOnce"]
