@@ -235,9 +235,13 @@ alertmanager:
     - name: 'null'
   persistence:
     enabled: false
-    storageClass: ""
-    accessMode: "ReadWriteOnce"
-    size: 50Gi
+  storageSpec:
+    volumeName: "prometheus-prometheus-operator-prometheus-db-prometheus-prometheus-operator-prometheus-0"
+    accessModes: ["ReadWriteOnce"]
+    storageClassName: "local-storage"
+    resources:
+      requests:
+        storage: 10Gi
   ## Already exist ServiceAccount
   ##
   serviceAccountName: ""
