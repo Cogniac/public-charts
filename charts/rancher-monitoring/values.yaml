@@ -345,7 +345,7 @@ prometheus:
   persistence:
     enabled: false
   storageSpec:
-    volumeName: "prometheus-prometheus-operator-prometheus-db-prometheus-prometheus-operator-prometheus-0"
+    volumeName: "prometheus-cluster-monitoring-db"
     accessModes: ["ReadWriteOnce"]
     storageClassName: "local-storage"
     resources:
