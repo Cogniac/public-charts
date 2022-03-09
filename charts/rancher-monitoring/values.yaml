@@ -293,7 +293,7 @@ grafana:
   readinessProbe: {}
 
 prometheus:
-  enabled: false
+  enabled: true
   level: cluster
   auth:
     args:
