@@ -343,8 +343,8 @@ prometheus:
         memory: 100Mi
         cpu: 100m
   persistence:
-    enabled: true
-    size: 50Gi
+    enabled: false
+  edgeflow: false
   storageSpec:
     volumeName: "prometheus-cluster-monitoring-db-prometheus-cluster-monitoring-0"
     accessModes: ["ReadWriteOnce"]

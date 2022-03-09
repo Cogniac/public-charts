@@ -17,10 +17,17 @@ spec:
     required:
       nodeSelectorTerms:
         - matchExpressions:
+{{- if .Values.edgeflow }}
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - edgeflow
+{{- else }}
             - key: prometheus
               operator: In
               values:
                 - master
+{{- end }}
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
