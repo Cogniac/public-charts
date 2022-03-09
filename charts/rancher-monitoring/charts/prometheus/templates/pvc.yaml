@@ -4,7 +4,7 @@ metadata:
   name: prometheus-cluster-monitoring-db-prometheus-cluster-monitoring-0
 spec:
   capacity:
-    storage: {{ .Values.persistent.size }}
+    storage: {{ .Values.persistence.size }}
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -39,4 +39,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.persistent.size }}
+      storage: {{ .Values.persistence.size }}
