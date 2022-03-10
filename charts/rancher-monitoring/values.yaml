@@ -293,7 +293,7 @@ grafana:
   readinessProbe: {}
 
 prometheus:
-  enabled: true
+  enabled: false
   level: cluster
   auth:
     args:
@@ -344,7 +344,7 @@ prometheus:
         cpu: 100m
   persistence:
     enabled: false
-  edgeflow: false
+  edgeflow: true
   persistence_location: "/cogdata/persistence"
   storageSpec:
     volumeName: "prometheus-cluster-monitoring-db-prometheus-cluster-monitoring-0"
