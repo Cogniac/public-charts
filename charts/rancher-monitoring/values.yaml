@@ -344,8 +344,6 @@ prometheus:
         cpu: 100m
   persistence:
     enabled: false
-  edgeflow: true
-  persistence_location: "/cogdata/persistence"
   storageSpec:
     volumeName: "prometheus-cluster-monitoring-db-prometheus-cluster-monitoring-0"
     accessModes: ["ReadWriteOnce"]
