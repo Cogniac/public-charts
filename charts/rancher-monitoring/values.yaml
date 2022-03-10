@@ -343,8 +343,9 @@ prometheus:
         memory: 100Mi
         cpu: 100m
   persistence:
-    enabled: false
-  edgeflow: true
+    enabled: true
+    size: 20Gi
+  edgeflow: false
   persistence_location: "/cogdata/persistence"
   storageSpec:
     volumeName: "prometheus-cluster-monitoring-db-prometheus-cluster-monitoring-0"
