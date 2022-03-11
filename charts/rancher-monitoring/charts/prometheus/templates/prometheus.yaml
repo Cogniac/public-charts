@@ -12,6 +12,17 @@ spec:
   securityContext:
 {{ toYaml .Values.securityContext | indent 4 }}
 {{- end }}
+  initContainers:
+  - name: clean-directory
+    command:
+    - /bin/sh
+    - -c
+    - rm -rf /prometheus/*
+    image: "busybox"
+    volumeMounts:
+    - name: prometheus-cluster-monitoring-db
+      mountPath: /prometheus
+      subPath: prometheus-db
   containers:
   - name: prometheus-proxy
     command:
