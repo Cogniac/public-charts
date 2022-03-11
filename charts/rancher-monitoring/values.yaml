@@ -295,7 +295,7 @@ grafana:
   readinessProbe: {}
 
 prometheus:
-  enabled: false
+  enabled: true
   level: cluster
   auth:
     args:
@@ -346,7 +346,7 @@ prometheus:
         cpu: 100m
   persistence:
     enabled: false
-  storageSpec:
+  hostPathSpec:
     hostPath:
       path: "/cogdata/prometheus"
       type: DirectoryOrCreate
