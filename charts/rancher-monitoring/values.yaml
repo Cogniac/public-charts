@@ -6,10 +6,10 @@ operator:
   apiGroup: "monitoring.coreos.com"
   image:
     repository: api.cogniac.io:5000/cogniac/prometheus-operator
-    tag: 0.55.0-cog
+    tag: 0.48.1-cog
     prometheusConfigReloader:
       repository: api.cogniac.io:5000/cogniac/prometheus-config-reloader
-      tag: 0.55.0-cog
+      tag: 0.48.1-cog
     configmapReload:
       repository: rancher/mirrored-jimmidyson-configmap-reload
       tag: v0.3.0
