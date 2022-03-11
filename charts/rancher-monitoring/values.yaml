@@ -1,4 +1,6 @@
 operator:
+  imagePullSecrets:
+    - name: cogniac-repo
   nameOverride: "prometheus-operator"
   enabledRBAC: true
   apiGroup: "monitoring.coreos.com"
