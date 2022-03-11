@@ -3,11 +3,11 @@ operator:
   enabledRBAC: true
   apiGroup: "monitoring.coreos.com"
   image:
-    repository: rancher/mirrored-prometheus-operator-prometheus-operator
-    tag: v0.48.0
+    repository: cogniac/prometheus-operator
+    tag: 0.55.0-cog
     prometheusConfigReloader:
-      repository: rancher/mirrored-prometheus-operator-prometheus-config-reloader
-      tag: v0.48.0
+      repository: cogniac/prometheus-config-reloader
+      tag: 0.55.0-cog
     configmapReload:
       repository: rancher/mirrored-jimmidyson-configmap-reload
       tag: v0.3.0
@@ -345,12 +345,16 @@ prometheus:
   persistence:
     enabled: false
   storageSpec:
-    volumeName: "prometheus-cluster-monitoring-db-prometheus-cluster-monitoring-0"
-    accessModes: ["ReadWriteOnce"]
-    storageClassName: "local-path"
-    resources:
-      requests:
-        storage: 10Gi
+    hostPath:
+      path: "/cogdata/prometheus"
+      type: DirectoryOrCreate
+  # storageSpec:
+  #   volumeName: "prometheus-cluster-monitoring-db-prometheus-cluster-monitoring-0"
+  #   accessModes: ["ReadWriteOnce"]
+  #   storageClassName: "local-path"
+  #   resources:
+  #     requests:
+  #       storage: 10Gi
   alertingEndpoints: []
   secrets: []
   ## Override the default generated ServiceAccount name
