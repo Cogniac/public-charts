@@ -158,11 +158,11 @@ spec:
 {{- end }}
 {{ include "rule.namespace.selector" . | indent 2}}
 {{ include "rule.selector" . | indent 2 }}
-{{- if .Values.hostPathSpec }}
   storage:
     disableMountSubPath: {{ .Values.disableMountSubPath }}
-{{ toYaml .Values.hostPathSpec | indent 4 }}
-{{- end }}
+    hostPath:
+      path: "/cogdata/prometheus"
+      type: DirectoryOrCreate
   volumes:
   - name: nginx-home
     emptyDir: {}
