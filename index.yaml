@@ -3,7 +3,7 @@ entries:
   rancher-external-dns:
   - apiVersion: v1
     appVersion: 0.7.3
-    created: "2022-03-11T10:01:38.602492-08:00"
+    created: "2022-03-11T10:15:01.405352-08:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: 225af98f5041b034bde7657582b01ff75253716d7f6e1b5976ad73c3c9406c86
@@ -19,7 +19,7 @@ entries:
     version: 0.1.2
   - apiVersion: v1
     appVersion: 0.7.3
-    created: "2022-03-11T10:01:38.601939-08:00"
+    created: "2022-03-11T10:15:01.40447-08:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: 1de3ba2020dad348d086adc388ed9d26d69652d88500229cf5bff7e62f3b8e26
@@ -35,7 +35,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: 0.6.0
-    created: "2022-03-11T10:01:38.601378-08:00"
+    created: "2022-03-11T10:15:01.403531-08:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: eeb52920ee1594b162bc0563a0440c9d783b72819ff7c1f08c8c3568c6c8040c
@@ -51,7 +51,7 @@ entries:
     version: 0.1.0
   - apiVersion: v1
     appVersion: 0.5.11
-    created: "2022-03-11T10:01:38.600769-08:00"
+    created: "2022-03-11T10:15:01.402654-08:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: 6ace2b4d09cd0f95b8731f9bf9f91d75b5baa0d1b1bf372fc067bec73f9e87ac
@@ -67,7 +67,7 @@ entries:
     version: 0.0.2
   - apiVersion: v1
     appVersion: 0.5.11
-    created: "2022-03-11T10:01:38.599993-08:00"
+    created: "2022-03-11T10:15:01.401691-08:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: c3bde337dce2c1a95385adabf78e402e47dae363328ff581c610d9a151f9ca30
@@ -83,8 +83,98 @@ entries:
     version: 0.0.1
   rancher-monitoring:
   - apiVersion: v1
+    appVersion: 0.6.6
+    created: "2022-03-11T10:15:01.722266-08:00"
+    dependencies:
+    - condition: alertmanager.enabled
+      name: alertmanager
+      repository: file://./charts/alertmanager/
+      version: 0.0.1
+    - condition: exporter-coredns.enabled
+      name: exporter-coredns
+      repository: file://./charts/exporter-coredns/
+      version: 0.0.1
+    - condition: exporter-kube-controller-manager.enabled
+      name: exporter-kube-controller-manager
+      repository: file://./charts/exporter-kube-controller-manager/
+      version: 0.0.1
+    - condition: exporter-kube-dns.enabled
+      name: exporter-kube-dns
+      repository: file://./charts/exporter-kube-dns/
+      version: 0.0.1
+    - condition: exporter-kube-etcd.enabled
+      name: exporter-kube-etcd
+      repository: file://./charts/exporter-kube-etcd/
+      version: 0.0.1
+    - condition: exporter-kube-scheduler.enabled
+      name: exporter-kube-scheduler
+      repository: file://./charts/exporter-kube-scheduler/
+      version: 0.0.1
+    - condition: exporter-kube-state.enabled
+      name: exporter-kube-state
+      repository: file://./charts/exporter-kube-state/
+      version: 0.0.1
+    - condition: exporter-kubelets.enabled
+      name: exporter-kubelets
+      repository: file://./charts/exporter-kubelets/
+      version: 0.0.1
+    - condition: exporter-kubernetes.enabled
+      name: exporter-kubernetes
+      repository: file://./charts/exporter-kubernetes/
+      version: 0.0.1
+    - condition: exporter-node.enabled
+      name: exporter-node
+      repository: file://./charts/exporter-node/
+      version: 0.0.1
+    - condition: exporter-node-windows.enabled
+      name: exporter-node-windows
+      repository: file://./charts/exporter-node-windows/
+      version: 0.0.1
+    - condition: grafana.enabled
+      name: grafana
+      repository: file://./charts/grafana/
+      version: 0.0.1
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: file://./charts/prometheus/
+      version: 0.0.1
+    - condition: exporter-fluentd.enabled
+      name: exporter-fluentd
+      repository: file://./charts/exporter-fluentd/
+      version: 0.0.1
+    - condition: operator.enabled,enabled
+      name: operator
+      repository: file://./charts/operator/
+      version: 0.0.2
+    - condition: operator-init.enabled
+      name: operator-init
+      repository: file://./charts/operator-init/
+      version: 0.1.0
+    - condition: webhook-receiver.enabled
+      name: webhook-receiver
+      repository: file://./charts/webhook-receiver/
+      version: 0.0.1
+    description: Provides monitoring for Kubernetes which is maintained by Rancher
+      2.
+    digest: 5e4a386a6a14923ed270e1e1b9ccf59c36566c06023ee8fe750d718436799965
+    home: https://github.com/coreos/prometheus-operator
+    icon: https://coreos.com/sites/default/files/inline-images/Overview-prometheus_0.png
+    keywords:
+    - operator
+    - prometheus
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: frank@rancher.com
+      name: thxCode
+    name: rancher-monitoring
+    sources:
+    - https://github.com/coreos/prometheus-operator
+    urls:
+    - https://cogniac.github.io/public-charts/rancher-monitoring-0.6.6.tgz
+    version: 0.6.6
+  - apiVersion: v1
     appVersion: 0.6.5
-    created: "2022-03-11T10:01:38.907506-08:00"
+    created: "2022-03-11T10:15:01.714593-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -174,7 +264,7 @@ entries:
     version: 0.6.5
   - apiVersion: v1
     appVersion: 0.6.4
-    created: "2022-03-11T10:01:38.899288-08:00"
+    created: "2022-03-11T10:15:01.706803-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -264,7 +354,7 @@ entries:
     version: 0.6.4
   - apiVersion: v1
     appVersion: 0.6.3
-    created: "2022-03-11T10:01:38.891507-08:00"
+    created: "2022-03-11T10:15:01.698407-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -354,7 +444,7 @@ entries:
     version: 0.6.3
   - apiVersion: v1
     appVersion: 0.6.2
-    created: "2022-03-11T10:01:38.883286-08:00"
+    created: "2022-03-11T10:15:01.690492-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -444,7 +534,7 @@ entries:
     version: 0.6.2
   - apiVersion: v1
     appVersion: 0.6.1
-    created: "2022-03-11T10:01:38.874906-08:00"
+    created: "2022-03-11T10:15:01.681945-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -534,7 +624,7 @@ entries:
     version: 0.6.1
   - apiVersion: v1
     appVersion: 0.6.0
-    created: "2022-03-11T10:01:38.866995-08:00"
+    created: "2022-03-11T10:15:01.672841-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -624,7 +714,7 @@ entries:
     version: 0.6.0
   - apiVersion: v1
     appVersion: 0.5.9
-    created: "2022-03-11T10:01:38.85859-08:00"
+    created: "2022-03-11T10:15:01.6613-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -714,7 +804,7 @@ entries:
     version: 0.5.9
   - apiVersion: v1
     appVersion: 0.5.8
-    created: "2022-03-11T10:01:38.850038-08:00"
+    created: "2022-03-11T10:15:01.65361-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -804,7 +894,7 @@ entries:
     version: 0.5.8
   - apiVersion: v1
     appVersion: 0.5.8-edgeflow
-    created: "2022-03-11T10:01:38.841768-08:00"
+    created: "2022-03-11T10:15:01.645084-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -894,7 +984,7 @@ entries:
     version: 0.5.8-edgeflow
   - apiVersion: v1
     appVersion: 0.5.7
-    created: "2022-03-11T10:01:38.833472-08:00"
+    created: "2022-03-11T10:15:01.636723-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -984,7 +1074,7 @@ entries:
     version: 0.5.7
   - apiVersion: v1
     appVersion: 0.5.7-edgeflow
-    created: "2022-03-11T10:01:38.824941-08:00"
+    created: "2022-03-11T10:15:01.627994-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1074,7 +1164,7 @@ entries:
     version: 0.5.7-edgeflow
   - apiVersion: v1
     appVersion: 0.5.6
-    created: "2022-03-11T10:01:38.816286-08:00"
+    created: "2022-03-11T10:15:01.619945-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1164,7 +1254,7 @@ entries:
     version: 0.5.6
   - apiVersion: v1
     appVersion: 0.5.6-edgeflow
-    created: "2022-03-11T10:01:38.808252-08:00"
+    created: "2022-03-11T10:15:01.611896-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1254,7 +1344,7 @@ entries:
     version: 0.5.6-edgeflow
   - apiVersion: v1
     appVersion: 0.5.5
-    created: "2022-03-11T10:01:38.79957-08:00"
+    created: "2022-03-11T10:15:01.603687-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1344,7 +1434,7 @@ entries:
     version: 0.5.5
   - apiVersion: v1
     appVersion: 0.5.5-edgeflow
-    created: "2022-03-11T10:01:38.79134-08:00"
+    created: "2022-03-11T10:15:01.595057-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1434,7 +1524,7 @@ entries:
     version: 0.5.5-edgeflow
   - apiVersion: v1
     appVersion: 0.5.4
-    created: "2022-03-11T10:01:38.782202-08:00"
+    created: "2022-03-11T10:15:01.587279-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1524,7 +1614,7 @@ entries:
     version: 0.5.4
   - apiVersion: v1
     appVersion: 0.5.4-edgeflow
-    created: "2022-03-11T10:01:38.774172-08:00"
+    created: "2022-03-11T10:15:01.579041-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1614,7 +1704,7 @@ entries:
     version: 0.5.4-edgeflow
   - apiVersion: v1
     appVersion: 0.5.3
-    created: "2022-03-11T10:01:38.76535-08:00"
+    created: "2022-03-11T10:15:01.570903-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1704,7 +1794,7 @@ entries:
     version: 0.5.3
   - apiVersion: v1
     appVersion: 0.5.3-edgeflow
-    created: "2022-03-11T10:01:38.75739-08:00"
+    created: "2022-03-11T10:15:01.562875-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1794,7 +1884,7 @@ entries:
     version: 0.5.3-edgeflow
   - apiVersion: v1
     appVersion: 0.5.2
-    created: "2022-03-11T10:01:38.748788-08:00"
+    created: "2022-03-11T10:15:01.554237-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1884,7 +1974,7 @@ entries:
     version: 0.5.2
   - apiVersion: v1
     appVersion: 0.5.2-edgeflow
-    created: "2022-03-11T10:01:38.740148-08:00"
+    created: "2022-03-11T10:15:01.546228-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -1974,7 +2064,7 @@ entries:
     version: 0.5.2-edgeflow
   - apiVersion: v1
     appVersion: 0.5.1
-    created: "2022-03-11T10:01:38.73198-08:00"
+    created: "2022-03-11T10:15:01.537791-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2064,7 +2154,7 @@ entries:
     version: 0.5.1
   - apiVersion: v1
     appVersion: 0.5.1-edgeflow
-    created: "2022-03-11T10:01:38.723696-08:00"
+    created: "2022-03-11T10:15:01.529188-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2154,7 +2244,7 @@ entries:
     version: 0.5.1-edgeflow
   - apiVersion: v1
     appVersion: 0.5.0
-    created: "2022-03-11T10:01:38.715433-08:00"
+    created: "2022-03-11T10:15:01.521184-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2244,7 +2334,7 @@ entries:
     version: 0.5.0
   - apiVersion: v1
     appVersion: 0.4.9-10Gi
-    created: "2022-03-11T10:01:38.706921-08:00"
+    created: "2022-03-11T10:15:01.51307-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2334,7 +2424,7 @@ entries:
     version: 0.4.9-10Gi
   - apiVersion: v1
     appVersion: 0.4.8
-    created: "2022-03-11T10:01:38.698324-08:00"
+    created: "2022-03-11T10:15:01.504534-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2424,7 +2514,7 @@ entries:
     version: 0.4.8
   - apiVersion: v1
     appVersion: 0.4.7
-    created: "2022-03-11T10:01:38.690034-08:00"
+    created: "2022-03-11T10:15:01.496136-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2514,7 +2604,7 @@ entries:
     version: 0.4.7
   - apiVersion: v1
     appVersion: 0.4.6
-    created: "2022-03-11T10:01:38.682019-08:00"
+    created: "2022-03-11T10:15:01.488078-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2604,7 +2694,7 @@ entries:
     version: 0.4.6
   - apiVersion: v1
     appVersion: 0.4.5
-    created: "2022-03-11T10:01:38.673178-08:00"
+    created: "2022-03-11T10:15:01.480191-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2694,7 +2784,7 @@ entries:
     version: 0.4.5
   - apiVersion: v1
     appVersion: 0.4.4
-    created: "2022-03-11T10:01:38.664863-08:00"
+    created: "2022-03-11T10:15:01.471773-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2784,7 +2874,7 @@ entries:
     version: 0.4.4
   - apiVersion: v1
     appVersion: 0.4.3
-    created: "2022-03-11T10:01:38.656421-08:00"
+    created: "2022-03-11T10:15:01.463481-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2874,7 +2964,7 @@ entries:
     version: 0.4.3
   - apiVersion: v1
     appVersion: 0.4.2
-    created: "2022-03-11T10:01:38.648351-08:00"
+    created: "2022-03-11T10:15:01.455379-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -2964,7 +3054,7 @@ entries:
     version: 0.4.2
   - apiVersion: v1
     appVersion: 0.4.1
-    created: "2022-03-11T10:01:38.639779-08:00"
+    created: "2022-03-11T10:15:01.446967-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -3054,7 +3144,7 @@ entries:
     version: 0.4.1
   - apiVersion: v1
     appVersion: 0.4.0
-    created: "2022-03-11T10:01:38.631549-08:00"
+    created: "2022-03-11T10:15:01.437959-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -3144,7 +3234,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 0.3.9
-    created: "2022-03-11T10:01:38.621833-08:00"
+    created: "2022-03-11T10:15:01.42775-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -3234,7 +3324,7 @@ entries:
     version: 0.3.9
   - apiVersion: v1
     appVersion: 0.1.5
-    created: "2022-03-11T10:01:38.610787-08:00"
+    created: "2022-03-11T10:15:01.416881-08:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -3321,4 +3411,4 @@ entries:
     urls:
     - https://cogniac.github.io/public-charts/rancher-monitoring-0.1.5.tgz
     version: 0.1.5
-generated: "2022-03-11T10:01:38.59903-08:00"
+generated: "2022-03-11T10:15:01.400531-08:00"

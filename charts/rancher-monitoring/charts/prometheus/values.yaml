@@ -52,7 +52,10 @@ disableMountSubPath: true
 ## Prometheus StorageSpec for persistent data
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
 ##
-storageSpec: {}
+storageSpec:
+  hostPath:
+    path: "/cogdata/prometheus"
+    type: DirectoryOrCreate
 #  storageClassName: gluster
 #  accessModes: ["ReadWriteOnce"]
 #  resources:

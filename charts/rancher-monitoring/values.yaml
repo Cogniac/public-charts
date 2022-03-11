@@ -350,13 +350,6 @@ prometheus:
     hostPath:
       path: "/cogdata/prometheus"
       type: DirectoryOrCreate
-  # storageSpec:
-  #   volumeName: "prometheus-cluster-monitoring-db-prometheus-cluster-monitoring-0"
-  #   accessModes: ["ReadWriteOnce"]
-  #   storageClassName: "local-path"
-  #   resources:
-  #     requests:
-  #       storage: 10Gi
   alertingEndpoints: []
   secrets: []
   ## Override the default generated ServiceAccount name
