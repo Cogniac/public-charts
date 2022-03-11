@@ -159,7 +159,12 @@ spec:
 {{ include "rule.namespace.selector" . | indent 2}}
 {{ include "rule.selector" . | indent 2 }}
   storage:
-    disableMountSubPath: {{ .Values.disableMountSubPath }}
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+      spec:
+        resources: {}
+      status: {}
     hostPath:
       path: "/cogdata/prometheus"
       type: DirectoryOrCreate
