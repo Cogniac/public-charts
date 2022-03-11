@@ -3,10 +3,10 @@ operator:
   enabledRBAC: true
   apiGroup: "monitoring.coreos.com"
   image:
-    repository: cogniac/prometheus-operator
+    repository: api.cogniac.io:5000/cogniac/prometheus-operator
     tag: 0.55.0-cog
     prometheusConfigReloader:
-      repository: cogniac/prometheus-config-reloader
+      repository: api.cogniac.io:5000/cogniac/prometheus-config-reloader
       tag: 0.55.0-cog
     configmapReload:
       repository: rancher/mirrored-jimmidyson-configmap-reload
