@@ -295,7 +295,7 @@ grafana:
   readinessProbe: {}
 
 prometheus:
-  enabled: true
+  enabled: false
   retention: "12h"
   level: cluster
   auth:
