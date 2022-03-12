@@ -297,7 +297,7 @@ grafana:
 prometheus:
   enabled: false
   annotations:
-    "hostPathVolumePath": "/cogdata/prometheus3"
+    "hostPathVolumePath": "/cogdata/prometheus"
   retention: "12h"
   level: cluster
   auth:
