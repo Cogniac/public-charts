@@ -6,10 +6,10 @@ operator:
   apiGroup: "monitoring.coreos.com"
   image:
     repository: api.cogniac.io:5000/cogniac/prometheus-operator
-    tag: 0.48.1-cog4
+    tag: 0.48.1-cog5
     prometheusConfigReloader:
       repository: api.cogniac.io:5000/cogniac/prometheus-config-reloader
-      tag: 0.48.1-cog4
+      tag: 0.48.1-cog5
     configmapReload:
       repository: rancher/mirrored-jimmidyson-configmap-reload
       tag: v0.3.0
@@ -296,6 +296,8 @@ grafana:
 
 prometheus:
   enabled: false
+  annotations:
+    "hostPathVolumePath": "/cogdata/prometheus3"
   retention: "12h"
   level: cluster
   auth:

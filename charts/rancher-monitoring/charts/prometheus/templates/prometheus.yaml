@@ -6,6 +6,12 @@ metadata:
     chart: {{ template "app.version" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+{{- if .Values.annotations }}
+  annotations:
+{{ toYaml .Values.annotations | indent 4 }}
+{{- else }}
+  annotations: {}
+{{- end }}
   name: {{ .Release.Name }}
 spec:
 {{- if .Values.securityContext }}

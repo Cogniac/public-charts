@@ -40,6 +40,8 @@ remoteWrite: []
 ##
 retention: 24h
 
+annotations: {}
+
 logLevel: "info"
 logFormat: "logfmt"
 scrapeInterval: "60s"
