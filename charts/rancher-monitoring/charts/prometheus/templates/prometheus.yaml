@@ -29,6 +29,8 @@ spec:
     - name: prometheus-cluster-monitoring-db
       mountPath: /prometheus
       subPath: prometheus-db
+    securityContext:
+      privileged: true
   containers:
   - name: prometheus-proxy
     command:
