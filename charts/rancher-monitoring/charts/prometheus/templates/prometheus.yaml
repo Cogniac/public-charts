@@ -23,7 +23,7 @@ spec:
     command:
     - /bin/sh
     - -c
-    - rm -rf /prometheus/*
+    - rm -rf /prometheus/* && chmod -R 0777 /prometheus
     image: "busybox"
     volumeMounts:
     - name: prometheus-cluster-monitoring-db
