@@ -32,6 +32,14 @@ spec:
     securityContext:
       runAsUser: 0
   containers:
+  - name: wal-cleaner
+    image: "cogniac/wal-cleaner:0.0.1"
+    volumeMounts:
+    - name: prometheus-cluster-monitoring-db
+      mountPath: /data
+      subPath: prometheus-db
+    securityContext:
+      runAsUser: 0
   - name: prometheus-proxy
     command:
     - /bin/sh
