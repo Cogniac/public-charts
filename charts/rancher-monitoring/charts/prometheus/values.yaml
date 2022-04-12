@@ -11,8 +11,7 @@ additionalRulesLabels: {}
 ## Tolerations for use with node taints
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
-tolerations:
-  []
+tolerations: []
   #  - key: "key"
   #    operator: "Equal"
   #    value: "value"
@@ -40,8 +39,6 @@ remoteWrite: []
 ##
 retention: 24h
 
-annotations: {}
-
 logLevel: "info"
 logFormat: "logfmt"
 scrapeInterval: "60s"
@@ -54,10 +51,7 @@ disableMountSubPath: true
 ## Prometheus StorageSpec for persistent data
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
 ##
-storageSpec:
-  hostPath:
-    path: "/cogdata/prometheus"
-    type: DirectoryOrCreate
+storageSpec: {}
 #  storageClassName: gluster
 #  accessModes: ["ReadWriteOnce"]
 #  resources:
@@ -68,75 +62,11 @@ storageSpec:
 ## Prometheus AdditionalScrapeConfigs
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
 ##
-additionalScrapeConfigs:
-  - job_name: "kubernetes-pods"
-
-    kubernetes_sd_configs:
-      - role: pod
-
-    relabel_configs:
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-        action: keep
-        regex: true
-      - source_labels:
-          [__meta_kubernetes_pod_annotation_prometheus_io_scrape_slow]
-        action: drop
-        regex: true
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
-        action: replace
-        regex: (https?)
-        target_label: __scheme__
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-        action: replace
-        target_label: __metrics_path__
-        regex: (.+)
-      - source_labels:
-          [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-        action: replace
-        regex: ([^:]+)(?::\d+)?;(\d+)
-        replacement: $1:$2
-        target_label: __address__
-      - action: labelmap
-        regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
-        replacement: __param_$1
-      - action: labelmap
-        regex: __meta_kubernetes_pod_label_(.+)
-      - source_labels: [__meta_kubernetes_namespace]
-        action: replace
-        target_label: namespace
-      - source_labels: [__meta_kubernetes_pod_name]
-        action: replace
-        target_label: pod
-      - source_labels: [__meta_kubernetes_pod_phase]
-        regex: Pending|Succeeded|Failed|Completed
-        action: drop
-
-  - job_name: "kubernetes-services"
-
-    metrics_path: /probe
-    params:
-      module: [http_2xx]
-
-    kubernetes_sd_configs:
-      - role: service
-
-    relabel_configs:
-      - source_labels:
-          [__meta_kubernetes_service_annotation_prometheus_io_probe]
-        action: keep
-        regex: true
-      - source_labels: [__address__]
-        target_label: __param_target
-      - target_label: __address__
-        replacement: blackbox
-      - source_labels: [__param_target]
-        target_label: instance
-      - action: labelmap
-        regex: __meta_kubernetes_service_label_(.+)
-      - source_labels: [__meta_kubernetes_namespace]
-        target_label: namespace
-      - source_labels: [__meta_kubernetes_service_name]
-        target_label: service
+additionalScrapeConfigs: []
+# - job_name: "prometheus"
+#   static_configs:
+#   - targets:
+#     - "localhost:9090"
 
 ## Prometheus AdditionalAlertManagerConfigs
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec

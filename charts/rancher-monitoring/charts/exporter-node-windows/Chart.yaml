@@ -1,8 +1,7 @@
 apiVersion: v1
 description: Windows Node Exporter service/endpoint and service monitor.
-engine: gotpl
 maintainers:
-- name: michelia
-  email: michelia@rancher.com
+- email: michelia@rancher.com
+  name: michelia
 name: exporter-node-windows
 version: 0.0.1

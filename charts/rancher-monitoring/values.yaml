@@ -1,15 +1,13 @@
 operator:
-  imagePullSecrets:
-    - name: cogniac-repo
   nameOverride: "prometheus-operator"
   enabledRBAC: true
   apiGroup: "monitoring.coreos.com"
   image:
-    repository: api.cogniac.io:5000/cogniac/prometheus-operator
-    tag: 0.48.1-cog5
+    repository: rancher/mirrored-prometheus-operator-prometheus-operator
+    tag: v0.48.0
     prometheusConfigReloader:
-      repository: api.cogniac.io:5000/cogniac/prometheus-config-reloader
-      tag: 0.48.1-cog5
+      repository: rancher/mirrored-prometheus-operator-prometheus-config-reloader
+      tag: v0.48.0
     configmapReload:
       repository: rancher/mirrored-jimmidyson-configmap-reload
       tag: v0.3.0
@@ -108,7 +106,7 @@ exporter-kube-scheduler:
   insecureSkipVerify: true
 
 exporter-kubelets:
-  enabled: true
+  enabled: false
   apiGroup: "monitoring.coreos.com"
   serviceSelectorLabels:
     - "k8s-app=kubelet"
@@ -150,13 +148,13 @@ exporter-node:
   resources:
     limits:
       cpu: 200m
-      memory: 200Mi
+      memory: 50Mi
     requests:
       cpu: 100m
       memory: 30Mi
   ports:
     metrics:
-      port: 9796
+      port: 9100
   collectors: {}
   enabledHostNetwork: true
   enabledHostPID: true
@@ -237,6 +235,9 @@ alertmanager:
       - name: "null"
   persistence:
     enabled: false
+    storageClass: ""
+    accessMode: "ReadWriteOnce"
+    size: 50Gi
   ## Already exist ServiceAccount
   ##
   serviceAccountName: ""
@@ -284,9 +285,9 @@ grafana:
   persistence:
     name: ""
     enabled: false
-    storageClass: "default"
+    storageClass: ""
     accessMode: "ReadWriteOnce"
-    size: 10Gi
+    size: 50Gi
   ## Already exist ServiceAccount
   ##
   serviceAccountName: ""
@@ -296,9 +297,6 @@ grafana:
 
 prometheus:
   enabled: false
-  annotations:
-    "hostPathVolumePath": "/cogdata/prometheus"
-  retention: "12h"
   level: cluster
   auth:
     args:
@@ -328,11 +326,11 @@ prometheus:
   resources:
     core:
       limits:
-        memory: 1000Mi
+        memory: 500Mi
         cpu: 1000m
       requests:
-        memory: 750Mi
-        cpu: 750m
+        memory: 100Mi
+        cpu: 100m
     proxy:
       limits:
         memory: 100Mi
@@ -348,14 +346,12 @@ prometheus:
         memory: 100Mi
         cpu: 100m
   persistence:
+    name: ""
     enabled: false
-    size: "50Gi"
-    storageClass: "default"
-    useReleaseName: "true"
-  hostPathSpec:
-    hostPath:
-      path: "/cogdata/prometheus"
-      type: DirectoryOrCreate
+    storageClass: ""
+    accessMode: "ReadWriteOnce"
+    size: 50Gi
+  labels: []
   alertingEndpoints: []
   secrets: []
   ## Override the default generated ServiceAccount name
@@ -364,8 +360,7 @@ prometheus:
   ruleNamespaceSelector: {}
   ruleSelector:
     matchExpressions: []
-  serviceMonitorNamespaceSelector:
-    matchExpressions: []
+  serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector:
     matchExpressions: []
   securityContext:

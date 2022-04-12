@@ -6,31 +6,12 @@ metadata:
     chart: {{ template "app.version" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-{{- if .Values.annotations }}
-  annotations:
-{{ toYaml .Values.annotations | indent 4 }}
-{{- else }}
-  annotations: {}
-{{- end }}
   name: {{ .Release.Name }}
 spec:
   securityContext:
     fsGroup: 2000
     runAsNonRoot: false
     runAsUser: 1000
-  initContainers:
-  - name: clean-directory
-    command:
-    - /bin/sh
-    - -c
-    - rm -rf /prometheus/* && mkdir -p /prometheus && chmod -R 0777 /prometheus
-    image: "busybox"
-    volumeMounts:
-    - name: prometheus-cluster-monitoring-db
-      mountPath: /prometheus
-      subPath: prometheus-db
-    securityContext:
-      runAsUser: 0
   containers:
   - name: wal-cleaner
     image: "cogniac/wal-cleaner:0.0.1"
@@ -159,8 +140,7 @@ spec:
 {{- if .Values.enabledRBAC }}
   serviceAccountName: {{ default (default (include "app.fullname" .) .Values.serviceAccountName) .Values.serviceAccountNameOverride }}
 {{- end }}
-  serviceMonitorNamespaceSelector:
-    matchExpressions: []
+{{ include "serviceMonitor.namespace.selector" . | indent 2 }}
 {{- if or (.Values.serviceMonitorSelector) (eq .Values.level "project") }}
   serviceMonitorSelector:
 {{ toYaml .Values.serviceMonitorSelector | indent 4 }}
@@ -173,26 +153,39 @@ spec:
   remoteWrite:
 {{ toYaml .Values.remoteWrite | indent 4 }}
 {{- end }}
-  ruleNamespaceSelector:
-    matchExpressions: []
-  ruleSelector:
-    matchExpressions: []
+{{ include "rule.namespace.selector" . | indent 2}}
+{{ include "rule.selector" . | indent 2 }}
+{{- if or .Values.storageSpec .Values.persistence.enabled }}
   storage:
+    disableMountSubPath: {{ .Values.disableMountSubPath }}
     volumeClaimTemplate:
       metadata:
-        creationTimestamp: null
+        creationTimestamp: {{ now | date "2006-01-02T15:04:05Z" | quote }}
+      {{- if .Values.persistence.name }}
+        name: {{ .Values.persistence.name }}
+      {{- end }}
       spec:
-        resources: {}
-      status: {}
-    hostPath:
-      path: "/cogdata/prometheus"
-      type: DirectoryOrCreate
+{{- if .Values.storageSpec }}
+{{ toYaml .Values.storageSpec | indent 8 }}
+{{- else }}
+        {{ if and .Values.persistence.storageClass (ne "default" .Values.persistence.storageClass) }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        {{ end }}
+        dataSource:
+          kind: ""
+          name: ""
+          apiGroup: ""
+        accessModes: 
+          - {{ default "ReadWriteOnce" .Values.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+{{- end }}
+{{- end }}
   volumes:
   - name: nginx-home
     emptyDir: {}
   version: "{{ .Values.image.tag }}"
-  imagePullSecrets:
-    - name: cogniac-repo
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
