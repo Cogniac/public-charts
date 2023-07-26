@@ -1,0 +1,16 @@
+apiVersion: ec2.aws.crossplane.io/v1alpha1
+kind: LaunchTemplate
+metadata:
+  name: {{ .Values.tenantId }}-support-lt
+spec:
+  forProvider:
+    region: {{ .Values.region }}
+    launchTemplateData:
+      imageId: {{ .Values.ami }}
+      instanceType: {{ .Values.instanceType.support }}
+      keyName: {{ .Values.keyName }}
+      securityGroupIDs: {{ .Values.securityGroupIDs }}
+      userData: {{ tpl (.Files.Get "files/cloudinit/support.txt") . | b64enc }}
+    launchTemplateName: {{ .Values.tenantId }}-support-lt
+  providerConfigRef:
+    name: {{ .Values.crossplaneProviderName }}

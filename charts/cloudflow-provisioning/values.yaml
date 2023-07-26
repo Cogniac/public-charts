@@ -1,0 +1,22 @@
+tenantId: ''
+cloudflowName: ''
+region: us-east-2
+ami: ami-073c12bdffb704056
+instanceType:
+  support: m5a.xlarge
+  gpu: g4dn.xlarge
+keyName: ''
+securityGroupIDs: []
+crossplaneProviderName: 'default'
+controlplane:
+  host: ''
+  port: ''
+  token: ''
+rke2:
+  version: 'v1.26.6+rke2r1'
+replicas:
+  support: 1
+  gpu: 1
+nvidia:
+  version: '470.103.01'
+subnets: []
