@@ -8,6 +8,10 @@ spec:
     launchTemplateData:
       imageID: {{ .Values.ami }}
       instanceType: {{ .Values.instanceType.gpu }}
+      blockDeviceMappings:
+        - deviceName: /dev/sda1
+          ebs:
+            volumeSize: 180
       keyName: {{ .Values.keyName }}
       securityGroupIDs: {{ .Values.securityGroupIDs }}
       userData: {{ tpl (.Files.Get "files/cloudinit/gpu.txt") . | b64enc }}
