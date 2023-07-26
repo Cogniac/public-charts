@@ -1,0 +1,120 @@
+#!/bin/bash
+if [[ -f "/etc/node-initialized" ]]; then
+  echo "Node already initialized" >> /var/log/instance_prov.log
+  exit 0
+fi
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
+echo "Disabled swap..." >> /var/log/instance_prov.log
+
+sudo ufw disable
+echo "Disabled firewall..." >> /var/log/instance_prov.log
+
+sudo mkdir -p /etc/rancher/rke2
+
+export INSTALL_RKE2_TYPE="agent"
+
+sudo cat <<EOF >>/etc/rancher/rke2/config.yaml
+server: {{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}
+token: {{ .Values.controlplane.token }}
+node-label:
+  - "tenant={{ .Values.tenantId }}"
+  - "cloudflow={{ .Values.cloudflowName }}"
+node-taint:
+  - "tenant={{ .Values.tenantId }}:NoSchedule"
+  - "cloudflow={{ .Values.cloudflowName }}:NoSchedule"
+EOF
+
+export INSTALL_RKE2_VERSION={{ .Values.rke2.version }}
+
+sudo curl -sfL https://get.rke2.io | sh -
+echo "RKE2 successfully installed..." >> /var/log/instance_prov.log
+
+sudo systemctl enable rke2-agent
+
+sudo systemctl stop rke2-agent
+
+
+echo "RKE2 started rke.." >> /var/log/instance_prov.log
+
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey |   sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list |   sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+echo "Stopping unattended services" >> /var/log/instance_prov.log
+sudo systemctl stop apt-daily-upgrade.service
+sudo systemctl stop apt-daily.service
+sudo systemctl stop apt-daily-upgrade.timer
+sudo systemctl stop apt-daily.timer
+sudo systemctl stop unattended-upgrades
+#sudo apt remove unattended-upgrades.service
+echo "update and upgrade" >> /var/log/instance_prov.log
+sudo apt update
+#sudo apt upgrade
+#sudo apt-get dist-upgrade -y
+sudo apt-get install -y dkms
+echo "installing build essential" >> /var/log/instance_prov.log
+sudo apt install -y ntp ntpstat build-essential
+
+echo "added build essential.." >> /var/log/instance_prov.log
+
+NVIDIA_DRIVER_VERSION="{{ .Values.nvidia.version }}"
+NVIDIA_DRIVER_INSTALLER="NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run"
+
+wget http://us.download.nvidia.com/tesla/$NVIDIA_DRIVER_VERSION/$NVIDIA_DRIVER_INSTALLER
+chmod u+x $NVIDIA_DRIVER_INSTALLER
+
+sudo ./$NVIDIA_DRIVER_INSTALLER --silent --no-drm --no-opengl-files --no-backup
+
+sudo nvidia-persistenced --persistence-mode
+sudo apt-get install -y nvidia-container-runtime nvidia-container-toolkit
+
+echo "installed nvidia driver {{ .Values.nvidia.version }}..." >> /var/log/instance_prov.log
+
+cat <<EOT >> /tmp/config.toml.tmpl
+version = 2
+
+[plugins]
+
+  [plugins."io.containerd.grpc.v1.cri"]
+    enable_selinux = false
+    sandbox_image = "index.docker.io/rancher/pause:3.2"
+    stream_server_address = "127.0.0.1"
+    stream_server_port = "10010"
+
+    [plugins."io.containerd.grpc.v1.cri".containerd]
+      default_runtime_name = "nvidia"
+      disable_snapshot_annotations = true
+      snapshotter = "overlayfs"
+
+      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes]
+
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
+          runtime_type = "io.containerd.runc.v2"
+
+          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
+            BinaryName = "/usr/bin/nvidia-container-runtime"
+
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia-experimental]
+          runtime_type = "io.containerd.runc.v2"
+
+          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia-experimental.options]
+            BinaryName = "/usr/bin/nvidia-container-runtime-experimental"
+
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+          runtime_type = "io.containerd.runc.v2"
+
+  [plugins."io.containerd.internal.v1.opt"]
+    path = "/data/rancher/rke2/agent/containerd"
+EOT
+sudo mkdir -p /var/lib/rancher/rke2/agent/etc/containerd
+sudo cp /tmp/config.toml.tmpl /var/lib/rancher/rke2/agent/etc/containerd/config.toml.tmpl
+
+echo "added config.toml.tmpl.." >> /var/log/instance_prov.log
+
+echo "RKE Node is now ready... Please ensure the primary_master is up and ready to roll and all nodes have joined and are ready" >> /var/log/instance_prov.log
+
+echo "Restarting Node for nvidia-container-runtime to take effect" >> /var/log/instance_prov.log
+
+touch /etc/node-initialized
+
+sudo reboot 0

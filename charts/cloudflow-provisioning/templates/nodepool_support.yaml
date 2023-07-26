@@ -1,0 +1,19 @@
+apiVersion: autoscaling.aws.crossplane.io/v1beta1
+kind: AutoScalingGroup
+metadata:
+  name: {{ .Values.tenantId }}-support-asg
+spec:
+  forProvider:
+    minSize: 1
+    maxSize: {{ .Values.replicas.support }}
+    desiredCapacity: {{ .Values.replicas.support }}
+    healthCheckGracePeriod: 30
+    launchTemplate:
+      launchTemplateName: {{ .Values.tenantId }}-support-lt
+    tags:
+      - key: Name
+        value: {{ .Values.tenantId }}-support
+    vpcZoneIdentifier: "{{ join "," .Values.subnets }}"
+    region: {{ .Values.region }}
+  providerConfigRef:
+    name: {{ .Values.crossplaneProviderName }}

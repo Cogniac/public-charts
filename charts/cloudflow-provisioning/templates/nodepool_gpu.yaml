@@ -1,0 +1,19 @@
+apiVersion: autoscaling.aws.crossplane.io/v1beta1
+kind: AutoScalingGroup
+metadata:
+  name: {{ .Values.tenantId }}-gpu-asg
+spec:
+  forProvider:
+    minSize: 1
+    maxSize: {{ .Values.replicas.gpu }}
+    desiredCapacity: {{ .Values.replicas.gpu }}
+    healthCheckGracePeriod: 30
+    launchTemplate:
+      launchTemplateName: {{ .Values.tenantId }}-gpu-lt
+    tags:
+      - key: Name
+        value: {{ .Values.tenantId }}-gpu
+    vpcZoneIdentifier: "{{ join "," .Values.subnets }}"
+    region: {{ .Values.region }}
+  providerConfigRef:
+    name: {{ .Values.crossplaneProviderName }}

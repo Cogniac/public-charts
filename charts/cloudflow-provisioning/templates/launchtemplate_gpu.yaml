@@ -1,0 +1,20 @@
+apiVersion: ec2.aws.crossplane.io/v1alpha1
+kind: LaunchTemplate
+metadata:
+  name: {{ .Values.tenantId }}-gpu-lt
+spec:
+  forProvider:
+    region: {{ .Values.region }}
+    launchTemplateData:
+      imageID: {{ .Values.ami }}
+      instanceType: {{ .Values.instanceType.gpu }}
+      blockDeviceMappings:
+        - deviceName: /dev/sda1
+          ebs:
+            volumeSize: 180
+      keyName: {{ .Values.keyName }}
+      securityGroupIDs: {{ .Values.securityGroupIDs }}
+      userData: {{ tpl (.Files.Get "files/cloudinit/gpu.txt") . | b64enc }}
+    launchTemplateName: {{ .Values.tenantId }}-gpu-lt
+  providerConfigRef:
+    name: {{ .Values.crossplaneProviderName }}
