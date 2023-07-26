@@ -104,7 +104,7 @@ version = 2
           runtime_type = "io.containerd.runc.v2"
 
   [plugins."io.containerd.internal.v1.opt"]
-    path = "/data/rancher/rke2/agent/containerd
+    path = "/data/rancher/rke2/agent/containerd"
 EOT
 sudo mkdir -p /var/lib/rancher/rke2/agent/etc/containerd
 sudo cp /tmp/config.toml.tmpl /var/lib/rancher/rke2/agent/etc/containerd/config.toml.tmpl
