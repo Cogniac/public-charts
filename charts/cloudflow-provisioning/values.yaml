@@ -3,8 +3,8 @@ cloudflowName: ''
 region: us-east-2
 ami: ami-073c12bdffb704056
 instanceType:
-  support: m5a.xlarge
-  gpu: g4dn.xlarge
+  support: m5a.large
+  gpu: g4dn.2xlarge
 keyName: ''
 securityGroupIDs: []
 crossplaneProviderName: 'default'
@@ -18,5 +18,5 @@ replicas:
   support: 1
   gpu: 1
 nvidia:
-  version: '470.103.01'
+  version: '470.182.03'
 subnets: []
