@@ -13,7 +13,7 @@ spec:
     tags:
       - key: Name
         value: {{ .Values.tenantId }}-support
-    vpcZoneIdentifier: "{{ join "," .Values.subnets }}"
+    vpcZoneIdentifier: "{{ .Values.subnets }}"
     region: {{ .Values.region }}
   providerConfigRef:
     name: {{ .Values.crossplaneProviderName }}

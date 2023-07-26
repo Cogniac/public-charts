@@ -9,7 +9,10 @@ spec:
       imageID: {{ .Values.ami }}
       instanceType: {{ .Values.instanceType.support }}
       keyName: {{ .Values.keyName }}
-      securityGroupIDs: {{ .Values.securityGroupIDs }}
+      securityGroupIDs:
+        {{- range ( split "," .Values.securityGroupIDs ) }}
+        - {{ . }}
+        {{- end }}
       userData: {{ tpl (.Files.Get "files/cloudinit/support.txt") . | b64enc }}
     launchTemplateName: {{ .Values.tenantId }}-support-lt
   providerConfigRef:

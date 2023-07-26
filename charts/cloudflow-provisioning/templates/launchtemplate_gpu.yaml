@@ -13,7 +13,10 @@ spec:
           ebs:
             volumeSize: 180
       keyName: {{ .Values.keyName }}
-      securityGroupIDs: {{ .Values.securityGroupIDs }}
+      securityGroupIDs:
+        {{- range ( split "," .Values.securityGroupIDs ) }}
+        - {{ . }}
+        {{- end }}
       userData: {{ tpl (.Files.Get "files/cloudinit/gpu.txt") . | b64enc }}
     launchTemplateName: {{ .Values.tenantId }}-gpu-lt
   providerConfigRef:
