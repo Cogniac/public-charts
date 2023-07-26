@@ -6,7 +6,7 @@ spec:
   forProvider:
     region: {{ .Values.region }}
     launchTemplateData:
-      imageId: {{ .Values.ami }}
+      imageID: {{ .Values.ami }}
       instanceType: {{ .Values.instanceType.support }}
       keyName: {{ .Values.keyName }}
       securityGroupIDs: {{ .Values.securityGroupIDs }}
