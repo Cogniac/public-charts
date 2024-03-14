@@ -1,0 +1,200 @@
+Content-Type: multipart/mixed; boundary="//"
+MIME-Version: 1.0
+
+--//
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-config.txt"
+
+#cloud-config
+cloud_final_modules:
+- [scripts-user, always]
+
+--//
+Content-Type: text/x-shellscript; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="userdata.txt"
+
+#!/bin/bash
+# alias k="sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml"
+
+# parameters needed
+# .Values.controlplane.token
+# .Values.internalLbDns
+# .Values.region
+#  {{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}
+
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
+echo "Disabled swap..." >> /var/log/instance_prov.log
+
+sudo ufw disable
+echo "Disabled firewall..." >> /var/log/instance_prov.log
+
+REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/region)
+
+if [ ! -f "/etc/rancher/rke2/config.yaml" ]; then
+sudo mkdir -p /etc/rancher/rke2
+sudo cat <<EOF >>/etc/rancher/rke2/config.yaml
+token: {{ .Values.controlplane.token }}
+tls-san:
+  - {{ .Values.internalLbDns }}
+etcd-s3: true
+etcd-s3-bucket: {{ Values.backup.etcdS3Bucket }}
+etcd-s3-region: {{ Values.backup.etcdS3Region }}
+etcd-s3-access-key: {{ Values.backup.etcdS3AccessKey}}
+etcd-s3-secret-key: {{ Values.backup.etcdS3SecretKey }}
+etcd-snapshot-schedule-cron: {{ Values.backup.etcdSnapshotScheduleCron }}
+etcd-snapshot-retention: {{ Values.backup.etcdSnapshotRetention }}
+EOF
+fi
+
+if [ ! -f "/etc/pki/public/$CERT_FILE" ] || [ ! -f "/etc/pki/private/$KEY_FILE" ]; then
+sudo mkdir /etc/pki/private
+sudo mkdir /etc/pki/public
+
+# Generate cert and keys
+KEY_FILE="cogniac_net.pem"
+CSR_FILE="cogniac_net.csr"
+CERT_FILE="cogniac_net.crt"
+DAYS_VALID=365
+
+sudo openssl genrsa -out /etc/pki/private/$KEY_FILE 2048
+sudo openssl req -new -key  /etc/pki/private/$KEY_FILE -out $CSR_FILE -subj "/C=US/ST=CA/L=SanJose/O=Cogniac/OU=DevOps/CN={{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}"
+sudo openssl x509 -req -days $DAYS_VALID -in $CSR_FILE -signkey /etc/pki/private/$KEY_FILE -out /etc/pki/public/$CERT_FILE
+echo "Self-signed Cert created..." >> /var/log/instance_prov.log
+fi
+export INSTALL_RKE2_VERSION="v1.26.12+rke2r1" 
+
+if ! rke2 --version &> /dev/null; then
+sudo curl -sfL https://get.rke2.io | sh -
+echo "RKE2 successfully installed..." >> /var/log/instance_prov.log
+
+sudo systemctl enable rke2-server
+
+sudo systemctl start rke2-server
+
+echo "rke2-server is enabled and restarted..." >> /var/log/instance_prov.log
+
+RKE2_VERSION=$(rke2 --version)
+echo "The current RKE2 version is: $RKE2_VERSION"  >> /var/log/instance_prov.log
+fi
+
+READY=$(sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n kube-system get no | grep Ready | wc -l)
+
+while [ $READY -lt 1 ]
+do
+echo "Sleeping 30 seconds while we wait for node to come up..." >> /var/log/instance_prov.log
+sleep 30
+READY=$(sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n kube-system get no | grep Ready | wc -l) 
+done
+
+echo "RKE Cluster is now ready..." >> /var/log/instance_prov.log
+
+sleep 45
+
+echo "Changing over MTU size to 8951 to take full advantage of our NICs" >> /var/log/instance_prov.log
+
+sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n kube-system patch cm rke2-canal-config --type='json' -p='[{"op": "replace", "path": "/data/veth_mtu", "value":"8951"}]'
+
+sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n kube-system rollout restart ds rke2-canal
+
+sleep 60
+
+echo "Sleeping 90secs to let the cluster settle..." >> /var/log/instance_prov.log
+
+sleep 90 
+
+if ! helm version &> /dev/null; then
+
+sudo curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+echo "Creating cattle-system namespace in the RKE Cluster" >> /var/log/instance_prov.log
+
+sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml create namespace cattle-system
+
+sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cattle-system create secret tls tls-rancher-ingress --cert=/etc/pki/public/$CERT_FILE --key=/etc/pki/private/$KEY_FILE 
+
+fi
+
+echo "Installing cert-manager" >> /var/log/instance_prov.log
+
+sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5.1/cert-manager.crds.yaml
+
+sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml create namespace cert-manager
+
+sudo helm repo add jetstack https://charts.jetstack.io
+
+sudo helm repo update
+
+sudo helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --version v1.5.1 \
+  --kubeconfig /etc/rancher/rke2/rke2.yaml
+
+READY=$(sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cert-manager get pods | grep "Running" | wc -l)
+while [ $READY -ne 3 ]
+do
+  echo "Sleeping 30 seconds while we wait for cert-manager to come up..." >> /var/log/instance_prov.log
+  sleep 30
+  READY=$(sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cert-manager get pods | grep "Running" | wc -l)
+done
+
+echo "Cert-manager is now ready. Starting Rancher deployment..." >> /var/log/instance_prov.log
+
+# export CRI_CONFIG_FILE=/var/lib/rancher/rke2/agent/etc/crictl.yaml
+
+# sudo /var/lib/rancher/rke2/bin/crictl -c /var/lib/rancher/rke2/agent/etc/crictl.yaml pull docker.io/rancher/rancher:v2.6.10
+
+READY=$(sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cattle-system get pods | grep "1/1" | wc -l)
+
+sudo helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+
+sudo helm repo update
+
+echo "Rancho URL: {{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}" >> /var/log/instance_prov.log
+
+READY=$(sudo helm list --namespace cattle-system --kubeconfig /etc/rancher/rke2/rke2.yaml | grep -u rancher | wc -l)
+if [ $READY -ne 1 ]; then
+  sudo helm install rancher rancher-stable/rancher \
+  --namespace cattle-system \
+  --set hostname="${ {{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}}" \
+  --set bootstrapPassword="{{ .Values.bootstrapPassword}}"\
+  --set replicas=1 \
+  --set ingress.tls.source=secret \
+  --set version=v2.7.9 \
+  --kubeconfig /etc/rancher/rke2/rke2.yaml 
+fi
+echo "Rancher Helm Chart has been installed." >> /var/log/instance_prov.log
+
+READY=$(sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cattle-system get pods | grep "1/1" | wc -l)
+while [ $READY -ne 1 ]
+do
+  echo "Sleeping 30 seconds while we wait for Rancher to come up..." >> /var/log/instance_prov.log
+  sleep 30
+  READY=$(sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cattle-system get pods | grep "1/1" | wc -l)
+done
+
+echo "Scaling Rancher to 3 replicas" >> /var/log/instance_prov.log
+sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cattle-system scale deploy rancher --replicas=3
+
+sleep 60
+
+echo "Cluster should now be initialized. Give it a few minutes to settle..." >> /var/log/instance_prov.log
+
+echo -e "Copy of rke2.yaml:\n" >> /var/log/instance_prov.log
+
+sudo cat /etc/rancher/rke2/rke2.yaml >> /var/log/instance_prov.log
+
+# Remove the script since this will have certificates in it
+sudo rm /var/lib/cloud/instance/scripts/part-001
+mkdir /home/ubuntu/.kube
+sudo cp /etc/rancher/rke2/rke2.yaml /home/ubuntu/.kube/config
+sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config
+sudo cp /var/lib/rancher/rke2/bin/kubectl /usr/local/bin
+sudo chmod ugo+x /usr/local/bin/kubectl
+
+echo "restarting nginx to pick up tls ingress" >> /var/log/instance_prov.log
+kubectl -n kube-system rollout restart ds rke2-ingress-nginx-controller

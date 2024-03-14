@@ -1,0 +1,37 @@
+#!/bin/bash
+
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
+echo "Disabled swap..." >> /var/log/instance_prov.log
+
+sudo ufw disable
+echo "Disabled firewall..." >> /var/log/instance_prov.log
+
+sudo mkdir -p /etc/rancher/rke2
+
+REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/region)
+
+sudo cat <<EOF >>/etc/rancher/rke2/config.yaml
+server: https://{{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}
+token: {{ .Values.controlplane.token }}
+tls-san:
+  - {{ .Values.internalLbDns }}
+etcd-s3: true
+etcd-s3-bucket: {{ Values.backup.etcdS3Bucket }}
+etcd-s3-region: {{ Values.backup.etcdS3Region }}
+etcd-s3-access-key: {{ Values.backup.etcdS3AccessKey}}
+etcd-s3-secret-key: {{ Values.backup.etcdS3SecretKey }}
+etcd-snapshot-schedule-cron: {{ Values.backup.etcdSnapshotScheduleCron }}
+etcd-snapshot-retention: {{ Values.backup.etcdSnapshotRetention }}
+EOF
+
+export INSTALL_RKE2_VERSION="v1.26.12+rke2r1" 
+
+sudo curl -sfL https://get.rke2.io | sh -
+echo "RKE2 successfully installed..." >> /var/log/instance_prov.log
+
+sudo systemctl enable rke2-server
+
+sudo systemctl start rke2-server
+
+echo "RKE Node is now ready... Please ensure the primary_master is up and ready to roll and all nodes have joined and are ready" >> /var/log/instance_prov.log

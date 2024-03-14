@@ -1,0 +1,27 @@
+clusteName: "cp-dev-rancho"
+region: us-east-1
+ami: ami-0149b2da6ceec4bb0
+instanceType: g4dn.2xlarge
+keyName: "ranchermaster-key " # pre-provisioned
+securityGroupIDs: "" #patch
+crossplaneProviderName: "default"
+controlplane:
+  host: ""
+  port: ""
+  token: ""
+  bootstrapPassword: ""
+rke2:
+  version: "v1.26.6+rke2r1"
+replicas:
+  primary: 1
+  secondary: 1
+nvidia:
+  version: "470.182.03"
+subnets: ""
+internalLbDns: ""
+backup:
+  etcdS3Bucket: ""
+  etcdS3Region: ""
+  etcdS3AccessKey: ""
+  etcdS3SecretKey: ""
+  etcdSnapshotScheduleCron: "* */1 * * *"

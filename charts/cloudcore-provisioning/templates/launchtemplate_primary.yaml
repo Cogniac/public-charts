@@ -1,0 +1,30 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: LaunchTemplate
+spec:
+  forProvider:
+    region: {{ .Values.region }}
+    name: {{ .Values.clusteName }}-primary
+    blockDeviceMappings:
+      - deviceName: /dev/sda1
+        ebs:
+          - volumeSize: 70
+    imageId: {{ .Values.ami }}
+    instanceType: {{ .Values.instanceType }}
+    networkInterfaces:
+      - deviceIndex: 0
+        securityGroups: 
+          {{- range ( split "," .Values.securityGroupIDs ) }}
+          - {{ . }}
+          {{- end }}
+        associatePublicIpAddress: "true"
+    # placement:
+    #   - availabilityZone: #patch
+    keyName: {{ .Values.keyName }}
+    userData: {{ tpl (.Files.Get "files/cloudinit/primary.txt") . | b64enc }}
+    monitoring:
+      - enabled: true
+    tags:
+      env: {{ .Values.env }}
+  deletionPolicy: Delete
+  providerConfigRef:
+    name: {{ .Values.crossplaneProviderName }}
