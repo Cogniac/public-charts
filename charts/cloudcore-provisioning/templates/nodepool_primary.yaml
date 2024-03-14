@@ -1,7 +1,7 @@
 apiVersion: autoscaling.aws.upbound.io/v1beta2
 kind: AutoscalingGroup
 metadata:
-  name: {{ .Values.tenantId }}-primary-asg
+  name: {{ .Values.clusteName }}-primary-asg
 spec:
   forProvider:
     mixedInstancesPolicy:
@@ -12,7 +12,7 @@ spec:
     minSize: 1
     region: {{ .Values.region }}
     - key: Name
-      value: {{ .Values.tenantId }}-primary
+      value: {{ .Values.clusteName }}-primary
     # tag:
     #   - key: AmazonECSManaged
     #     propagateAtLaunch: true

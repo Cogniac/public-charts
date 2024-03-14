@@ -1,4 +1,4 @@
-clusteName: "cp-dev-rancho"
+clusteName: "cp-dev"
 region: us-east-1
 ami: ami-0149b2da6ceec4bb0
 instanceType: g4dn.2xlarge
@@ -19,6 +19,7 @@ nvidia:
   version: "470.182.03"
 subnets: ""
 internalLbDns: ""
+internalLbName: ""
 backup:
   etcdS3Bucket: ""
   etcdS3Region: ""
