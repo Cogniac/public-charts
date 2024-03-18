@@ -17,12 +17,12 @@ token: {{ .Values.controlplane.token }}
 tls-san:
   - {{ .Values.internalLbDns }}
 etcd-s3: true
-etcd-s3-bucket: {{ Values.backup.etcdS3Bucket }}
-etcd-s3-region: {{ Values.backup.etcdS3Region }}
-etcd-s3-access-key: {{ Values.backup.etcdS3AccessKey}}
-etcd-s3-secret-key: {{ Values.backup.etcdS3SecretKey }}
-etcd-snapshot-schedule-cron: {{ Values.backup.etcdSnapshotScheduleCron }}
-etcd-snapshot-retention: {{ Values.backup.etcdSnapshotRetention }}
+etcd-s3-bucket: {{ .Values.backup.etcdS3Bucket }}
+etcd-s3-region: {{ .Values.backup.etcdS3Region }}
+etcd-s3-access-key: {{ .Values.backup.etcdS3AccessKey}}
+etcd-s3-secret-key: {{ .Values.backup.etcdS3SecretKey }}
+etcd-snapshot-schedule-cron: {{ .Values.backup.etcdSnapshotScheduleCron }}
+etcd-snapshot-retention: {{ .Values.backup.etcdSnapshotRetention }}
 EOF
 
 export INSTALL_RKE2_VERSION="v1.26.12+rke2r1" 
