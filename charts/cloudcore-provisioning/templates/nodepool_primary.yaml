@@ -8,11 +8,12 @@ spec:
       - launchTemplate:
         - launchTemplateSpecification: 
             launchTemplateName:  {{ .Values.clusteName }}-primary
-    maxSize: {{ .Values.replicas.primary }} # only one primary is enough
+    maxSize: {{ .Values.replicas.primary }} 
     minSize: 1
     region: {{ .Values.region }}
-    - key: Name
-      value: {{ .Values.clusteName }}-primary
+    tag:
+      - key: Name
+        value: {{ .Values.clusteName }}-primary
     # tag:
     #   - key: AmazonECSManaged
     #     propagateAtLaunch: true
