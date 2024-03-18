@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo swapoff -a
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
 echo "Disabled swap..." >> /var/log/instance_prov.log
@@ -133,7 +135,7 @@ if [ $READY -ne 1 ]; then
   sudo helm install rancher rancher-stable/rancher \
   --namespace cattle-system \
   --set hostname="${ {{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}}" \
-  --set bootstrapPassword="{{ .Values.bootstrapPassword}}"\
+  --set bootstrapPassword="{{ .Values.controlplane.bootstrapPassword}}"\
   --set replicas=1 \
   --set ingress.tls.source=secret \
   --set version=v2.7.9 \
