@@ -3,7 +3,7 @@ region: "us-east-1"
 ami: "ami-0149b2da6ceec4bb0"
 instanceType: "g4dn.2xlarge"
 keyName: "ranchermaster-key" # pre-provisioned
-securityGroupIDs: ""
+securityGroupIDs: []
 crossplaneProviderName: "default"
 controlplane:
   host: ""
@@ -26,4 +26,5 @@ backup:
   etcdS3AccessKey: ""
   etcdS3SecretKey: ""
   etcdSnapshotScheduleCron: "* */1 * * *"
+  etcdSnapshotRetention: 12
 env: cp-dev
