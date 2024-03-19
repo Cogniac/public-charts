@@ -13,9 +13,9 @@ spec:
     networkInterfaces:
       - deviceIndex: 0
         securityGroups: 
-          {{- range ( split "," .Values.securityGroupIDs ) }}
+        {{- range .Values.securityGroupIDs }}
           - {{ . }}
-          {{- end }}
+        {{- end }}
         associatePublicIpAddress: "true"
     # placement:
     #   - availabilityZone: #patch

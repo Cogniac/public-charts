@@ -26,3 +26,4 @@ backup:
   etcdS3AccessKey: ""
   etcdS3SecretKey: ""
   etcdSnapshotScheduleCron: "* */1 * * *"
+env: cp-dev
