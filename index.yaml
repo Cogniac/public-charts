@@ -2,19 +2,19 @@ apiVersion: v1
 entries:
   cloudcore-provisioning:
   - apiVersion: v2
-    appVersion: 0.0.2
-    created: "2024-03-19T10:17:45.301585-04:00"
+    appVersion: 0.0.3
+    created: "2024-03-19T11:47:49.876175-04:00"
     description: A Helm chart for Kubernetes
-    digest: 0fd18a3a6807e969cbc4128a2a02eb1692c4c52a082d65ecfaeb05bee20ae0e1
+    digest: 315a568c04b1e942948bcb6fe158ed344438280ba0ef5a2c1ef5120e72cc88fb
     name: cloudcore-provisioning
     type: application
     urls:
-    - cloudcore-provisioning-0.0.2.tgz
-    version: 0.0.2
+    - cloudcore-provisioning-0.0.3.tgz
+    version: 0.0.3
   cloudflow-provisioning:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-03-19T10:17:45.301944-04:00"
+    created: "2024-03-19T11:47:49.876632-04:00"
     description: A Helm chart for Kubernetes
     digest: 3d10f4b433a61e683483578eb47418b665b8ad7940eba2951d151bfb60775c3e
     name: cloudflow-provisioning
@@ -25,7 +25,7 @@ entries:
   rancher-external-dns:
   - apiVersion: v1
     appVersion: 0.7.3
-    created: "2024-03-19T10:17:45.305226-04:00"
+    created: "2024-03-19T11:47:49.882313-04:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: 225af98f5041b034bde7657582b01ff75253716d7f6e1b5976ad73c3c9406c86
@@ -41,7 +41,7 @@ entries:
     version: 0.1.2
   - apiVersion: v1
     appVersion: 0.7.3
-    created: "2024-03-19T10:17:45.304575-04:00"
+    created: "2024-03-19T11:47:49.881638-04:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: 1de3ba2020dad348d086adc388ed9d26d69652d88500229cf5bff7e62f3b8e26
@@ -57,7 +57,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: 0.6.0
-    created: "2024-03-19T10:17:45.303925-04:00"
+    created: "2024-03-19T11:47:49.880925-04:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: eeb52920ee1594b162bc0563a0440c9d783b72819ff7c1f08c8c3568c6c8040c
@@ -73,7 +73,7 @@ entries:
     version: 0.1.0
   - apiVersion: v1
     appVersion: 0.5.11
-    created: "2024-03-19T10:17:45.303359-04:00"
+    created: "2024-03-19T11:47:49.880208-04:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: 6ace2b4d09cd0f95b8731f9bf9f91d75b5baa0d1b1bf372fc067bec73f9e87ac
@@ -89,7 +89,7 @@ entries:
     version: 0.0.2
   - apiVersion: v1
     appVersion: 0.5.11
-    created: "2024-03-19T10:17:45.30261-04:00"
+    created: "2024-03-19T11:47:49.877429-04:00"
     description: 'Configure external DNS servers (AWS Route53, Google CloudDNS and
       others) for Kubernetes Ingresses and Services '
     digest: c3bde337dce2c1a95385adabf78e402e47dae363328ff581c610d9a151f9ca30
@@ -106,7 +106,7 @@ entries:
   rancher-monitoring:
   - apiVersion: v1
     appVersion: 0.3.9
-    created: "2024-03-19T10:17:45.348593-04:00"
+    created: "2024-03-19T11:47:49.914551-04:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -196,7 +196,7 @@ entries:
     version: 0.3.9-fixup
   - apiVersion: v1
     appVersion: 0.1.5
-    created: "2024-03-19T10:17:45.335666-04:00"
+    created: "2024-03-19T11:47:49.90466-04:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -285,7 +285,7 @@ entries:
     version: 0.1.5
   - apiVersion: v1
     appVersion: 0.1.5-cogniac
-    created: "2024-03-19T10:17:45.324897-04:00"
+    created: "2024-03-19T11:47:49.895259-04:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -373,4 +373,4 @@ entries:
     urls:
     - rancher-monitoring-0.1.5-cogniac.tgz
     version: 0.1.5-cogniac
-generated: "2024-03-19T10:17:45.299816-04:00"
+generated: "2024-03-19T11:47:49.874485-04:00"
