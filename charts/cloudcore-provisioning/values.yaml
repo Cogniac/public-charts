@@ -11,7 +11,7 @@ controlplane:
   token: ""
   bootstrapPassword: ""
 rke2:
-  version: "v1.26.6+rke2r1"
+  version: "v1.26.12+rke2r1"
 nvidia:
   version: "470.182.03"
 subnets: ""

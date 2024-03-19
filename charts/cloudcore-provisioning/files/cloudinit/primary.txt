@@ -20,7 +20,7 @@ etcd-s3-bucket: {{ .Values.backup.etcdS3Bucket }}
 etcd-s3-region: {{ .Values.backup.etcdS3Region }}
 etcd-s3-access-key: {{ .Values.backup.etcdS3AccessKey}}
 etcd-s3-secret-key: {{ .Values.backup.etcdS3SecretKey }}
-etcd-snapshot-schedule-cron: {{ .Values.backup.etcdSnapshotScheduleCron }}
+etcd-snapshot-schedule-cron: '{{ .Values.backup.etcdSnapshotScheduleCron }}'
 etcd-snapshot-retention: {{ .Values.backup.etcdSnapshotRetention }}
 EOF
 fi
