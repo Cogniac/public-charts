@@ -6,7 +6,7 @@ spec:
   forProvider:
     launchTemplate:
       - name: {{ .Values.clusteName }}-primary
-        version: 1
+        version: "1"
     maxSize: {{ .Values.replicas.primary }} 
     minSize: 1
     region: {{ .Values.region }}
