@@ -1,4 +1,4 @@
-clusteName: "cp-dev"
+clusterName: "rancher-master"
 region: "us-east-1"
 ami: "ami-0149b2da6ceec4bb0"
 instanceType: "g4dn.2xlarge"
@@ -12,9 +12,6 @@ controlplane:
   bootstrapPassword: ""
 rke2:
   version: "v1.26.6+rke2r1"
-replicas:
-  primary: 1
-  secondary: 1
 nvidia:
   version: "470.182.03"
 subnets: ""

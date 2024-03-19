@@ -1,11 +1,11 @@
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: LaunchTemplate
 metadata:
-  name: {{ .Values.clusteName }}-primary
+  name: {{ .Values.clusterName }}-primary
 spec:
   forProvider:
     region: {{ .Values.region }}
-    name: {{ .Values.clusteName }}-primary
+    name: {{ .Values.clusterName }}-primary
     blockDeviceMappings:
       - deviceName: /dev/sda1
         ebs:
