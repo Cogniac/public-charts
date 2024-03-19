@@ -5,7 +5,7 @@ metadata:
 spec:
   forProvider:
     launchTemplate:
-      name: {{ .Values.clusteName }}-primary
+      - name: {{ .Values.clusteName }}-primary
     maxSize: {{ .Values.replicas.primary }} 
     minSize: 1
     region: {{ .Values.region }}
