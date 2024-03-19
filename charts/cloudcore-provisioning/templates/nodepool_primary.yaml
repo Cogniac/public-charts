@@ -4,10 +4,8 @@ metadata:
   name: {{ .Values.clusteName }}-primary-asg
 spec:
   forProvider:
-    mixedInstancesPolicy:
-      - launchTemplate:
-        - launchTemplateSpecification: 
-            launchTemplateName:  {{ .Values.clusteName }}-primary
+    launchTemplate:
+      name: {{ .Values.clusteName }}-primary
     maxSize: {{ .Values.replicas.primary }} 
     minSize: 1
     region: {{ .Values.region }}
