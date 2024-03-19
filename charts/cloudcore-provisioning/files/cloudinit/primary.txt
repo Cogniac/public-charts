@@ -40,7 +40,7 @@ sudo openssl req -new -key  /etc/pki/private/$KEY_FILE -out $CSR_FILE -subj "/C=
 sudo openssl x509 -req -days $DAYS_VALID -in $CSR_FILE -signkey /etc/pki/private/$KEY_FILE -out /etc/pki/public/$CERT_FILE
 echo "Self-signed Cert created..." >> /var/log/instance_prov.log
 fi
-export INSTALL_RKE2_VERSION="{ .Values.rke2.version }" 
+export INSTALL_RKE2_VERSION="{{ .Values.rke2.version }}" 
 
 if ! rke2 --version &> /dev/null; then
 sudo curl -sfL https://get.rke2.io | sh -
