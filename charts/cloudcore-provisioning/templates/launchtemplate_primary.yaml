@@ -1,5 +1,7 @@
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: LaunchTemplate
+metadata:
+  name: {{ .Values.clusteName }}-primary
 spec:
   forProvider:
     region: {{ .Values.region }}
