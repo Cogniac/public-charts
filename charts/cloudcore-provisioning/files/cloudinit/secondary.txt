@@ -15,7 +15,7 @@ sudo cat <<EOF >>/etc/rancher/rke2/config.yaml
 server: https://{{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}
 token: {{ .Values.controlplane.token }}
 tls-san:
-  - {{ .Values.internalLbDns }}
+  - {{ .Values.controlplane.host  }}
 etcd-s3: true
 etcd-s3-bucket: {{ .Values.backup.etcdS3Bucket }}
 etcd-s3-region: {{ .Values.backup.etcdS3Region }}
