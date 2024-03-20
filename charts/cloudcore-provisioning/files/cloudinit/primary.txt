@@ -36,7 +36,7 @@ CERT_FILE="cogniac_net.crt"
 DAYS_VALID=365
 
 sudo openssl genrsa -out /etc/pki/private/$KEY_FILE 2048
-sudo openssl req -new -key  /etc/pki/private/$KEY_FILE -out $CSR_FILE -subj "/C=US/ST=CA/L=SanJose/O=Cogniac/OU=DevOps/CN={{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}"
+sudo openssl req -new -key  /etc/pki/private/$KEY_FILE -out $CSR_FILE -subj "/C=US/ST=CA/L=SanJose/O=Cogniac/OU=DevOps/CN={{ .Values.controlplane.host }}"
 sudo openssl x509 -req -days $DAYS_VALID -in $CSR_FILE -signkey /etc/pki/private/$KEY_FILE -out /etc/pki/public/$CERT_FILE
 echo "Self-signed Cert created..." >> /var/log/instance_prov.log
 fi

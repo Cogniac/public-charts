@@ -16,7 +16,7 @@ nvidia:
   version: "470.182.03"
 subnets: ""
 internalLbDns: ""
-internalLbName: ""
+# internalLbName: ""
 backup:
   etcdS3Bucket: ""
   etcdS3Region: ""
