@@ -21,11 +21,11 @@ etcd-s3-bucket: {{ .Values.backup.etcdS3Bucket }}
 etcd-s3-region: {{ .Values.backup.etcdS3Region }}
 etcd-s3-access-key: {{ .Values.backup.etcdS3AccessKey}}
 etcd-s3-secret-key: {{ .Values.backup.etcdS3SecretKey }}
-etcd-snapshot-schedule-cron: {{ .Values.backup.etcdSnapshotScheduleCron }}
+etcd-snapshot-schedule-cron: '{{ .Values.backup.etcdSnapshotScheduleCron }}'
 etcd-snapshot-retention: {{ .Values.backup.etcdSnapshotRetention }}
 EOF
 
-export INSTALL_RKE2_VERSION="v1.26.12+rke2r1" 
+export INSTALL_RKE2_VERSION="{{ .Values.rke2.version }}" 
 
 sudo curl -sfL https://get.rke2.io | sh -
 echo "RKE2 successfully installed..." >> /var/log/instance_prov.log

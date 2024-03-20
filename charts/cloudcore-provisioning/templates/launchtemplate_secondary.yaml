@@ -1,11 +1,11 @@
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: LaunchTemplate
 metadata:
-  name: {{ .Values.clusterName }}-primary
+  name: {{ .Values.clusterName }}-secondary
 spec:
   forProvider:
     region: {{ .Values.region }}
-    name: {{ .Values.clusterName }}-primary
+    name: {{ .Values.clusterName }}-secondary
     blockDeviceMappings:
       - deviceName: /dev/sda1
         ebs:
@@ -20,7 +20,7 @@ spec:
         {{- end }}
         associatePublicIpAddress: "true"
     keyName: {{ .Values.keyName }}
-    userData: {{ tpl (.Files.Get "files/cloudinit/primary.txt") . | b64enc }}
+    userData: {{ tpl (.Files.Get "files/cloudinit/secondary.txt") . | b64enc }}
     monitoring:
       - enabled: true
     tags:
