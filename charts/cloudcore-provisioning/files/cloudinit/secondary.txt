@@ -12,10 +12,10 @@ sudo mkdir -p /etc/rancher/rke2
 REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/region)
 
 sudo cat <<EOF >>/etc/rancher/rke2/config.yaml
-server: https://{{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}
-token: {{ .Values.controlplane.token }}
+server: https://{{ .Values.internalLbDns }}:9345
+token: {{ .Values.rancher.token }}
 tls-san:
-  - {{ .Values.controlplane.host  }}
+  - {{ .Values.internalLbDns }}
 etcd-s3: true
 etcd-s3-bucket: {{ .Values.backup.etcdS3Bucket }}
 etcd-s3-region: {{ .Values.backup.etcdS3Region }}

@@ -5,9 +5,8 @@ instanceType: "g4dn.2xlarge"
 keyName: "ranchermaster-key" # pre-provisioned
 securityGroupIDs: []
 crossplaneProviderName: "default"
-controlplane:
+rancher:
   host: ""
-  port: ""
   token: ""
   bootstrapPassword: ""
 rke2:

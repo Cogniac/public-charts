@@ -12,7 +12,7 @@ REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/region)
 if [ ! -f "/etc/rancher/rke2/config.yaml" ]; then
 sudo mkdir -p /etc/rancher/rke2
 sudo cat <<EOF >>/etc/rancher/rke2/config.yaml
-token: {{ .Values.controlplane.token }}
+token: {{ .Values.rancher.token }}
 tls-san:
   - {{ .Values.internalLbDns }}
 etcd-s3: true
@@ -36,7 +36,7 @@ CERT_FILE="cogniac_net.crt"
 DAYS_VALID=365
 
 sudo openssl genrsa -out /etc/pki/private/$KEY_FILE 2048
-sudo openssl req -new -key  /etc/pki/private/$KEY_FILE -out $CSR_FILE -subj "/C=US/ST=CA/L=SanJose/O=Cogniac/OU=DevOps/CN={{ .Values.controlplane.host }}"
+sudo openssl req -new -key  /etc/pki/private/$KEY_FILE -out $CSR_FILE -subj "/C=US/ST=CA/L=SanJose/O=Cogniac/OU=DevOps/CN={{ .Values.rancher.host }}"
 sudo openssl x509 -req -days $DAYS_VALID -in $CSR_FILE -signkey /etc/pki/private/$KEY_FILE -out /etc/pki/public/$CERT_FILE
 echo "Self-signed Cert created..." >> /var/log/instance_prov.log
 fi
@@ -77,9 +77,9 @@ sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml 
 
 sleep 60
 
-echo "Sleeping 90 secs to let the cluster settle..." >> /var/log/instance_prov.log
+echo "Sleeping 60 secs to let the cluster settle..." >> /var/log/instance_prov.log
 
-sleep 90 
+sleep 60
 
 if ! helm version &> /dev/null; then
 
@@ -128,14 +128,14 @@ sudo helm repo add rancher-stable https://releases.rancher.com/server-charts/sta
 
 sudo helm repo update
 
-echo "Rancho URL: {{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}" >> /var/log/instance_prov.log
+echo "Rancho URL: {{ .Values.rancher.host }}" >> /var/log/instance_prov.log
 
 READY=$(sudo helm list --namespace cattle-system --kubeconfig /etc/rancher/rke2/rke2.yaml | grep -u rancher | wc -l)
 if [ $READY -ne 1 ]; then
   sudo helm install rancher rancher-stable/rancher \
   --namespace cattle-system \
-  --set hostname="{{ .Values.controlplane.host }}" \
-  --set bootstrapPassword="{{ .Values.controlplane.bootstrapPassword }}" \
+  --set hostname="{{ .Values.rancher.host }}" \
+  --set bootstrapPassword="{{ .Values.rancher.bootstrapPassword }}" \
   --set replicas=1 \
   --set ingress.tls.source=secret \
   --set version=v2.7.9 \
