@@ -134,8 +134,8 @@ READY=$(sudo helm list --namespace cattle-system --kubeconfig /etc/rancher/rke2/
 if [ $READY -ne 1 ]; then
   sudo helm install rancher rancher-stable/rancher \
   --namespace cattle-system \
-  --set hostname="${{ .Values.controlplane.host }}:{{ .Values.controlplane.port }}" \
-  --set bootstrapPassword="{{ .Values.controlplane.bootstrapPassword }}"\
+  --set hostname="{{ .Values.controlplane.host }}" \
+  --set bootstrapPassword="{{ .Values.controlplane.bootstrapPassword }}" \
   --set replicas=1 \
   --set ingress.tls.source=secret \
   --set version=v2.7.9 \
