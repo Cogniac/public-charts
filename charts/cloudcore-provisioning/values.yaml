@@ -9,6 +9,8 @@ rancher:
   host: ""
   token: ""
   bootstrapPassword: ""
+  sslcert: ""
+  sslkey: ""
 rke2:
   version: "v1.26.12+rke2r1"
 nvidia:
