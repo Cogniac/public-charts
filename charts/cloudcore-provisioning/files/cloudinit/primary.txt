@@ -33,8 +33,8 @@ DAYS_VALID=365
 sudo mkdir /etc/pki/private
 sudo mkdir /etc/pki/public
 
-echo {{  .Values.rancher.sslcert  }} > /etc/pki/public/$CERT_FILE
-echo {{  .Values.rancher.sslkey  }} > /etc/pki/private/$KEY_FILE
+printf "%s" "{{  .Values.rancher.sslcert  }}" > /etc/pki/public/$CERT_FILE
+printf "%s" "{{  .Values.rancher.sslkey  }}" > /etc/pki/private/$KEY_FILE
 
 # self-signed for testing
 # if [ ! -f "/etc/pki/public/$CERT_FILE" ] || [ ! -f "/etc/pki/private/$KEY_FILE" ]; then
