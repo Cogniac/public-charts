@@ -30,8 +30,8 @@ KEY_FILE="cogniac_net.pem"
 CERT_FILE="cogniac_net.crt"
 DAYS_VALID=365
 
-echo {{  rancher.sslcert  }} > /etc/pki/public/$CERT_FILE
-echo {{  rancher.sslkey  }} > /etc/pki/private/$KEY_FILE
+echo {{  .Values.rancher.sslcert  }} > /etc/pki/public/$CERT_FILE
+echo {{  .Values.rancher.sslkey  }} > /etc/pki/private/$KEY_FILE
 
 # self-signed for testing
 # if [ ! -f "/etc/pki/public/$CERT_FILE" ] || [ ! -f "/etc/pki/private/$KEY_FILE" ]; then
